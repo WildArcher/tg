@@ -11,7 +11,7 @@ import json
 import asyncio
 from datetime import date, datetime
 import streamlit as st
-from tg_parser_utils import text_preprocessing
+from tg_parser_utils import text_preprocessing, get_lda_themes
 morph = pymorphy2.MorphAnalyzer()
 
 from gensim.test.utils import common_texts
@@ -50,3 +50,6 @@ st.write("Clean text: ", new_clean_text)
 
 texts_to_lda = list(data['clean_text'].apply(lambda x: list(x.split(' '))))
 common_dictionary = Dictionary(texts_to_lda)
+new_text_themes = get_lda_themes(new_clean_text, common_dictionary=common_dictionary, lda=lda_model)
+
+st.write(new_text_themes)
