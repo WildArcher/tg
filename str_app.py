@@ -18,7 +18,7 @@ from datetime import date, datetime
 # from telethon.tl.functions.messages import (GetHistoryRequest)
 # from telethon.tl.types import PeerChannel
 import streamlit 
-from tg_parser_utils import text_preprocessing
+# from tg_parser_utils import text_preprocessing
 from pathlib import Path
 morph = pymorphy2.MorphAnalyzer()
 
