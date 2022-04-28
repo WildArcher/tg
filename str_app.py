@@ -16,25 +16,27 @@ start_date = streamlit.date_input(
      "start date")
 
 
-# config = configparser.ConfigParser()
-# config.read("config.ini")
+config = configparser.ConfigParser()
+config.read("config.ini")
 
-# # Setting configuration values
-# api_id = config['Telegram']['api_id']
-# api_hash = config['Telegram']['api_hash']
+# Setting configuration values
+api_id = config['Telegram']['api_id']
+api_hash = config['Telegram']['api_hash']
 
-# api_hash = str(api_hash)
+api_hash = str(api_hash)
 
-# phone = config['Telegram']['phone']
-# username = config['Telegram']['username']
+phone = config['Telegram']['phone']
+username = config['Telegram']['username']
 
-# channel_name = streamlit.text_input('print channel_name')
+channel_name = streamlit.text_input('print channel_name')
 
-# channel_name = input('print channel_name')
+channel_name = input('print channel_name')
 
-# @client.on(events.NewMessage(chats=f'{channel_name}'))
-# async def my_event_handler(event):
-#     streamlit.write(event.raw_text)
+streamlit.write('OK')
 
-# client.start()
-# client.run_until_disconnected()
+@client.on(events.NewMessage(chats=f'{channel_name}'))
+async def my_event_handler(event):
+    streamlit.write(event.raw_text)
+
+client.start()
+client.run_until_disconnected()
