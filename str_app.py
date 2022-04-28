@@ -11,25 +11,13 @@ import json
 import asyncio
 from datetime import date, datetime
 import streamlit as st
-from tg_parser_utils import text_preprocessing
+from tg_parser_utils import text_preprocessing, get_lda_themes
 morph = pymorphy2.MorphAnalyzer()
 
 from gensim.test.utils import common_texts
 from gensim.corpora.dictionary import Dictionary
 from gensim.models.ldamodel import LdaModel
 from gensim import corpora, models, similarities
-
-def get_lda_themes(text, common_dictionary, lda):
-  new_texts_to_lda = list(text.split(' '))
-
-  new_texts_to_lda = [common_dictionary.doc2bow(text) for text in [new_texts_to_lda]]
-  themes = []
-  for row in np.array(lda[new_texts_to_lda])[0]:
-    if row[1] > 0.1:
-      themes.append(row[0])
-     #print([common_dictionary[int(lda.show_topic(int(row[0]))[i][0])] for i in range(len(lda.show_topic(0)))])
-
-  return themes
 
 DATA_PATH = 'data/'
 
