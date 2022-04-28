@@ -19,18 +19,18 @@ import streamlit
 start_date = streamlit.date_input(
      "start date")
 
-DATA_PATH = './data'
+DATA_PATH = 'data/'
 
-data_new = pd.read_json('data/channel_messages_markettwits_new.json')
+data_new = pd.read_json(DATA_PATH + 'channel_messages_markettwits_new.json')
 
-with open('stops_russian.txt', newline='\n', encoding='utf-8') as w:
+with open(DATA_PATH + 'stops_russian.txt', newline='\n', encoding='utf-8') as w:
     words = w.readlines()
     words = [line.rstrip() for line in words] 
     
     
 stop_words = list(set([word.lower() for word in words]))
 
-with open('stops_nltk.txt', newline='\n', encoding='utf-8') as w:
+with open(DATA_PATH + 'stops_nltk.txt', newline='\n', encoding='utf-8') as w:
     words = w.readlines()
     words = [line.rstrip().replace("'", "").replace(",", "") for line in words] 
     
