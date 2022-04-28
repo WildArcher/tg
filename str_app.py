@@ -68,3 +68,11 @@ lda_model =  models.LdaModel.load('lda.model')
 new_text_themes = get_lda_themes(new_clean_text, common_dictionary=common_dictionary, lda=lda_model)
 
 st.write(new_text_themes)
+
+import unrar
+
+from unrar import rarfile
+rar = rarfile.RarFile('data/sentence_embeddings_mark_tw_only_clean_text.rar')
+rar.extractall()
+# rar.read('test_file.txt')
+sentence_embeddings = np.load('sentence_embeddings_mark_tw_only_clean_text.npy')
