@@ -22,7 +22,7 @@ from gensim import corpora, models, similarities
 DATA_PATH = 'data/'
 
 data_new = pd.read_json(DATA_PATH + 'channel_messages_markettwits_new.json')
-data = pd.read_json(DATA_PATH + 'data (4).csv')
+data = pd.read_csv(DATA_PATH + 'data (4).csv')
 
 with open(DATA_PATH + 'stops_russian.txt', newline='\n', encoding='utf-8') as w:
     words = w.readlines()
