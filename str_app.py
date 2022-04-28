@@ -2,7 +2,6 @@ from telethon import TelegramClient, events, sync
 import pandas as pd
 import numpy as np
 from collections import Counter
-# import nltk
 import pymorphy2
 import re
 import warnings
@@ -11,15 +10,10 @@ import configparser
 import json
 import asyncio
 from datetime import date, datetime
-
-# from telethon import TelegramClient
-# from telethon.errors import SessionPasswordNeededError
-# from telethon.tl.functions.messages import (GetHistoryRequest)
-# from telethon.tl.types import PeerChannel
-import streamlit 
-# from tg_parser_utils import text_preprocessing
-from pathlib import Path
-morph = pymorphy2.MorphAnalyzer()
+# import streamlit 
+# # from tg_parser_utils import text_preprocessing
+# from pathlib import Path
+# morph = pymorphy2.MorphAnalyzer()
 
 
 start_date = streamlit.date_input(
