@@ -2,3 +2,4 @@ Telethon-dev
 pandas-dev
 pymorphy2-dev
 nltk-dev
+pathlib-dev
