@@ -7,8 +7,8 @@ from gensim.corpora.dictionary import Dictionary
 from gensim.models.ldamodel import LdaModel
 from gensim import corpora, models, similarities
 
-DATA_PATH = 'data/'
-data = pd.read_csv(DATA_PATH + 'data (4).csv')
+# DATA_PATH = 'data/'
+data = pd.read_csv('data/data (4).csv')
 
 texts_to_lda = list(data['clean_text'].apply(lambda x: list(x.split(' '))))
 common_dictionary = Dictionary(texts_to_lda)
