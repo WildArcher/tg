@@ -3,7 +3,6 @@ import pandas as pd
 import numpy as np
 from collections import Counter
 # import nltk
-from nltk.corpus import stopwords
 import pymorphy2
 import re
 import warnings
