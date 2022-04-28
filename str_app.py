@@ -57,7 +57,7 @@ new_texts_to_lda = list(new_clean_text.split(' '))
 new_texts_to_lda = [common_dictionary.doc2bow(text) for text in [new_texts_to_lda]]
 themes = []
 for row in np.array(lda[new_texts_to_lda])[0]:
-if row[1] > 0.1:
-  themes.append(row[0])
+    if row[1] > 0.1:
+        themes.append(row[0])
 
 st.write(themes)
