@@ -11,7 +11,7 @@ import json
 import asyncio
 from datetime import date, datetime
 import streamlit 
-# # from tg_parser_utils import text_preprocessing
+from tg_parser_utils import text_preprocessing
 # from pathlib import Path
 # morph = pymorphy2.MorphAnalyzer()
 
