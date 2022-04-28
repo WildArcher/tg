@@ -10,13 +10,13 @@ import configparser
 import json
 import asyncio
 from datetime import date, datetime
-import streamlit 
+import streamlit as st
 from tg_parser_utils import text_preprocessing
 # from pathlib import Path
 morph = pymorphy2.MorphAnalyzer()
 
 
-start_date = streamlit.date_input(
+start_date = st.date_input(
      "start date")
 
 DATA_PATH = 'data/'
