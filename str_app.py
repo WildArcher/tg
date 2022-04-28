@@ -50,6 +50,14 @@ st.write("Clean text: ", new_clean_text)
 
 texts_to_lda = list(data['clean_text'].apply(lambda x: list(x.split(' '))))
 common_dictionary = Dictionary(texts_to_lda)
-new_text_themes = get_lda_themes(new_clean_text, common_dictionary=common_dictionary, lda=lda_model)
+# new_text_themes = get_lda_themes(new_clean_text, common_dictionary=common_dictionary, lda=lda_model)
 
-st.write(new_text_themes)
+new_texts_to_lda = list(new_clean_text.split(' '))
+
+new_texts_to_lda = [common_dictionary.doc2bow(text) for text in [new_texts_to_lda]]
+themes = []
+for row in np.array(lda[new_texts_to_lda])[0]:
+if row[1] > 0.1:
+  themes.append(row[0])
+
+st.write(themes)
