@@ -1,4 +1,4 @@
-# from telethon import TelegramClient, events, sync
+from telethon import TelegramClient, events, sync
 import pandas as pd
 import numpy as np
 from collections import Counter
@@ -12,16 +12,17 @@ import asyncio
 from datetime import date, datetime
 import streamlit as st
 from tg_parser_utils import text_preprocessing
-# from pathlib import Path
 morph = pymorphy2.MorphAnalyzer()
 
-
-start_date = st.date_input(
-     "start date")
+from gensim.test.utils import common_texts
+from gensim.corpora.dictionary import Dictionary
+from gensim.models.ldamodel import LdaModel
+from gensim import corpora, models, similarities
 
 DATA_PATH = 'data/'
 
 data_new = pd.read_json(DATA_PATH + 'channel_messages_markettwits_new.json')
+data = pd.read_json(DATA_PATH + 'data (4).csv')
 
 with open(DATA_PATH + 'stops_russian.txt', newline='\n', encoding='utf-8') as w:
     words = w.readlines()
@@ -45,4 +46,7 @@ new_clean_text = text_preprocessing(text=new_text, lemmatize=True,
                                               replacement=False, del_stop_words=True, no_connection=False, 
                                               del_word_less_2_symbol=True, stop_words=stop_words)
 
-st.write(new_clean_text)
+st.write("Clean text: ", new_clean_text)
+
+texts_to_lda = list(data['clean_text'].apply(lambda x: list(x.split(' '))))
+common_dictionary = Dictionary(texts_to_lda)
