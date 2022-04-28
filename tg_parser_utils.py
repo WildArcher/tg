@@ -1,3 +1,7 @@
+import re
+import pymorphy2
+morph = pymorphy2.MorphAnalyzer()
+
 def text_preprocessing(text, lemmatize, replacement, del_stop_words, no_connection, del_word_less_2_symbol, stop_words):
   
     for i in range(len(stop_words)):
