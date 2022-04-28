@@ -21,7 +21,7 @@ start_date = streamlit.date_input(
 
 DATA_PATH = './data'
 
-data_new = pd.read_json(DATA_PATH / 'channel_messages_markettwits_new.json')
+data_new = pd.read_json(DATA_PATH + 'channel_messages_markettwits_new.json')
 
 with open('stops_russian.txt', newline='\n', encoding='utf-8') as w:
     words = w.readlines()
