@@ -130,13 +130,3 @@ def get_lda_themes(text, common_dictionary, lda):
      #print([common_dictionary[int(lda.show_topic(int(row[0]))[i][0])] for i in range(len(lda.show_topic(0)))])
 
   return themes
-
-
-@torch.no_grad()
-def predict(text):
-    inputs = tokenizer(text=text, max_length=512, padding=True, truncation=True, return_tensors='pt')
-    outputs = model(**inputs)
-    predicted = torch.nn.functional.softmax(outputs.logits, dim=1)
-    predicted_score = np.max(predicted.numpy())
-    predicted_sentiment = int(torch.argmax(predicted).numpy())
-    return predicted_score, predicted_sentiment
