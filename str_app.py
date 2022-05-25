@@ -64,6 +64,8 @@ data['organisations'] = data['organisations'].fillna('[]').apply(lambda x: x.rep
 data['pearsons'] = data['pearsons'].fillna('[]').apply(lambda x: x.replace('[', '').replace(']', '').replace("'", '').split(', '))
 data['locations'] = data['locations'].fillna('[]').apply(lambda x: x.replace('[', '').replace(']', '').replace("'", '').split(', '))
 
+data['lda_themme'] = data['lda_themme'].fillna('[]').apply(lambda x: x.replace('[', '').replace(']', '').replace("'", '').split(', '))
+
 with open(DATA_PATH + 'stops_russian.txt', newline='\n', encoding='utf-8') as w:
     words = w.readlines()
     words = [line.rstrip() for line in words] 
