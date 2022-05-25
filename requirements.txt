@@ -5,4 +5,4 @@ unrar==0.4
 flair==0.11.3
 googletrans==2.3.0
 streamlit>=1.8.1
-sentence-transformers
+sentence-transformers==2.2.0
