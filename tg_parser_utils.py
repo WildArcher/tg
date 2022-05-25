@@ -7,6 +7,18 @@ from gensim.corpora.dictionary import Dictionary
 from gensim.models.ldamodel import LdaModel
 from gensim import corpora, models, similarities
 
+from gensim.test.utils import common_texts
+from gensim.corpora.dictionary import Dictionary
+from gensim.models.ldamodel import LdaModel
+
+from flair.data import Sentence
+from flair.models import SequenceTagger
+from googletrans import Translator
+
+import torch
+from transformers import AutoModelForSequenceClassification
+from transformers import BertTokenizerFast
+
 def text_preprocessing(text, lemmatize, replacement, del_stop_words, no_connection, del_word_less_2_symbol, stop_words):
   
     for i in range(len(stop_words)):
@@ -51,3 +63,80 @@ def text_preprocessing(text, lemmatize, replacement, del_stop_words, no_connecti
         d = " ".join([w for w in d.split() if len(w) > 2])
 
     return d
+
+def lemmatize_ner(word):
+  return morph.parse(word)[0].normal_form
+
+def make_lists_of_ner(text):
+
+  text_en = translator.translate(text, src="ru", dest="en").text
+  text_en = Sentence(text_en)
+
+  tagger.predict(text_en)
+
+  list_of_organisation = []
+  list_of_pearsons = []
+  list_of_locations = []
+
+  for entity in text_en.get_spans('ner'):
+    if entity.tag == "PER":
+      list_of_pearsons.append(lemmatize_ner(translator.translate(entity.text, src="en", dest="ru").text))
+    if entity.tag == "ORG":
+      list_of_organisation.append(lemmatize_ner(translator.translate(entity.text, src="en", dest="ru").text))
+    if entity.tag == "LOC":
+      list_of_locations.append(lemmatize_ner(translator.translate(entity.text, src="en", dest="ru").text))
+
+  return list_of_organisation, list_of_pearsons, list_of_locations 
+
+def make_ner_datasets(data, entity):
+  pearsons_all = []
+  for i in range(data.shape[0]):
+    new_pearsons = data[entity].values[i]
+    if new_pearsons != []:
+      pearsons_all = pearsons_all + new_pearsons
+
+
+  pearsons_vol = []
+  for i in range(data.shape[0]):
+    new_pearsons = data['pearsons'].values[i]
+    if (new_pearsons != []) and (data['make_vol'].values[i] == 1):
+      pearsons_vol = pearsons_vol + new_pearsons
+
+
+
+  per_all = Counter(pearsons_all)
+  per_vol = Counter(pearsons_vol)
+
+  per_all = pd.DataFrame(np.vstack((list(per_all.keys()), list(per_all.values()))).T, columns=['words', 'count_all'])
+  per_vol = pd.DataFrame(np.vstack((list(per_vol.keys()), list(per_vol.values()))).T, columns=['words', 'count_vol'])
+  per_all = per_all.merge(per_vol, on=['words'], how='outer').fillna(0)
+
+  per_all['count_all'] = per_all['count_all'].astype(int)
+  per_all['count_vol'] = per_all['count_vol'].astype(int)
+
+  per_all['percentage_vol'] = per_all['count_vol'] / per_all['count_all']
+  per_all['score'] = per_all['percentage_vol']*  (per_all['count_all']-1)**0.3
+
+  return per_all
+
+def get_lda_themes(text, common_dictionary, lda):
+  new_texts_to_lda = list(text.split(' '))
+
+  new_texts_to_lda = [common_dictionary.doc2bow(text) for text in [new_texts_to_lda]]
+  themes = []
+  for row in np.array(lda[new_texts_to_lda])[0]:
+    if row[1] > 0.1:
+      themes.append(row[0])
+     #print([common_dictionary[int(lda.show_topic(int(row[0]))[i][0])] for i in range(len(lda.show_topic(0)))])
+
+  return themes
+
+
+@torch.no_grad()
+def predict(text):
+    inputs = tokenizer(text=text, max_length=512, padding=True, truncation=True, return_tensors='pt')
+    outputs = model(**inputs)
+    predicted = torch.nn.functional.softmax(outputs.logits, dim=1)
+    predicted_score = np.max(predicted.numpy())
+    predicted_sentiment = int(torch.argmax(predicted).numpy())
+    return predicted_score, predicted_sentiment
