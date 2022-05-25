@@ -6,6 +6,8 @@ from gensim.test.utils import common_texts
 from gensim.corpora.dictionary import Dictionary
 from gensim.models.ldamodel import LdaModel
 from gensim import corpora, models, similarities
+from collections import Counter
+counter_ = Counter()
 
 from gensim.test.utils import common_texts
 from gensim.corpora.dictionary import Dictionary
