@@ -19,7 +19,17 @@ from gensim.corpora.dictionary import Dictionary
 from gensim.models.ldamodel import LdaModel
 from gensim import corpora, models, similarities
 
+from flair.data import Sentence
+from flair.models import SequenceTagger
+from googletrans import Translator
+
+import torch
+from transformers import AutoModelForSequenceClassification
+from transformers import BertTokenizerFast
+
 from tg_parser_utils import lemmatize_ner
+
+
 
 
 def get_lda_themes(text, common_dictionary, lda):
