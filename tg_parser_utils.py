@@ -11,13 +11,13 @@ from gensim.test.utils import common_texts
 from gensim.corpora.dictionary import Dictionary
 from gensim.models.ldamodel import LdaModel
 
-from flair.data import Sentence
-from flair.models import SequenceTagger
-from googletrans import Translator
+# from flair.data import Sentence
+# from flair.models import SequenceTagger
+# from googletrans import Translator
 
-import torch
-from transformers import AutoModelForSequenceClassification
-from transformers import BertTokenizerFast
+# import torch
+# from transformers import AutoModelForSequenceClassification
+# from transformers import BertTokenizerFast
 
 def text_preprocessing(text, lemmatize, replacement, del_stop_words, no_connection, del_word_less_2_symbol, stop_words):
   
