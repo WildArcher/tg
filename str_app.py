@@ -80,7 +80,105 @@ stop_nltk = list(set([word.lower() for word in words]))
 
 stop_words = stop_words + stop_nltk
 
-per_all = make_ner_datasets(data=data, entity='pearsons')
+pearsons_all = []
+for i in range(data.shape[0]):
+  new_pearsons = data['pearsons'].values[i]
+  if new_pearsons != []:
+    pearsons_all = pearsons_all + new_pearsons
+
+
+pearsons_vol = []
+for i in range(data.shape[0]):
+  new_pearsons = data['pearsons'].values[i]
+  if (new_pearsons != []) and (data['make_vol'].values[i] == 1):
+    pearsons_vol = pearsons_vol + new_pearsons
+
+
+
+per_all = Counter(pearsons_all)
+per_vol = Counter(pearsons_vol)
+
+per_all = pd.DataFrame(np.vstack((list(per_all.keys()), list(per_all.values()))).T, columns=['words', 'count_all'])
+per_vol = pd.DataFrame(np.vstack((list(per_vol.keys()), list(per_vol.values()))).T, columns=['words', 'count_vol'])
+per_all = per_all.merge(per_vol, on=['words'], how='outer').fillna(0)
+
+per_all['count_all'] = per_all['count_all'].astype(int)
+per_all['count_vol'] = per_all['count_vol'].astype(int)
+
+per_all['percentage_vol'] = per_all['count_vol'] / per_all['count_all']
+per_all['score'] = per_all['percentage_vol']*  (per_all['count_all']-1)**0.3
+
+
+locations_all = []
+for i in range(data.shape[0]):
+  new_locations = data['locations'].values[i]
+  if new_pearsons != []:
+    locations_all = locations_all + new_locations
+
+
+locations_vol = []
+for i in range(data.shape[0]):
+  new_locations = data['locations'].values[i]
+  if (new_locations != []) and (data['make_vol'].values[i] == 1):
+    locations_vol = locations_vol + new_locations
+
+
+
+loc_all = Counter(locations_all)
+loc_vol = Counter(locations_vol)
+
+loc_all = pd.DataFrame(np.vstack((list(loc_all.keys()), list(loc_all.values()))).T, columns=['words', 'count_all'])
+loc_vol = pd.DataFrame(np.vstack((list(loc_vol.keys()), list(loc_vol.values()))).T, columns=['words', 'count_vol'])
+loc_all = loc_all.merge(loc_vol, on=['words'], how='outer').fillna(0)
+
+loc_all['count_all'] = loc_all['count_all'].astype(int)
+loc_all['count_vol'] = loc_all['count_vol'].astype(int)
+
+loc_all['percentage_vol'] = loc_all['count_vol'] / loc_all['count_all']
+loc_all['score'] = loc_all['percentage_vol']*  (loc_all['count_all']-2)**0.3
+
+
+
+
+organisations_all = []
+for i in range(data.shape[0]):
+  new_organisations = data['organisations'].values[i]
+  if new_organisations != []:
+    organisations_all = organisations_all + new_organisations
+
+
+organisations_vol = []
+for i in range(data.shape[0]):
+  new_organisations = data['organisations'].values[i]
+  if (new_organisations != []) and (data['make_vol'].values[i] == 1):
+    organisations_vol = organisations_vol + new_organisations
+
+
+
+org_all = Counter(organisations_all)
+org_vol = Counter(organisations_vol)
+
+org_all = pd.DataFrame(np.vstack((list(org_all.keys()), list(org_all.values()))).T, columns=['words', 'count_all'])
+org_vol = pd.DataFrame(np.vstack((list(org_vol.keys()), list(org_vol.values()))).T, columns=['words', 'count_vol'])
+org_all = org_all.merge(org_vol, on=['words'], how='outer').fillna(0)
+
+org_all['count_all'] = org_all['count_all'].astype(int)
+org_all['count_vol'] = org_all['count_vol'].astype(int)
+
+org_all['percentage_vol'] = org_all['count_vol'] / org_all['count_all']
+org_all['score'] = org_all['percentage_vol']*  (org_all['count_all']-1)**0.3
+
+### LDA
+
+texts_to_lda = list(data['clean_text'].apply(lambda x: list(x.split(' '))))
+
+common_dictionary = Dictionary(texts_to_lda)
+common_corpus = [common_dictionary.doc2bow(text) for text in texts_to_lda]
+
+num_topics=50
+lda = LdaModel(common_corpus, num_topics=num_topics)
+
+### LDA
 
 new_text = data_new['message'].values[0]
 new_clean_text = text_preprocessing(text=new_text, lemmatize=True, 
