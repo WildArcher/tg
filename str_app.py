@@ -29,8 +29,13 @@ import torch
 from transformers import AutoModelForSequenceClassification
 from transformers import BertTokenizerFast
 
+from sentence_transformers import SentenceTransformer
+model_ru = SentenceTransformer('symanto/sn-xlm-roberta-base-snli-mnli-anli-xnli')
+
 from tg_parser_utils import lemmatize_ner, make_ner_datasets
 
+tagger = SequenceTagger.load('ner')
+translator = Translator()
 
 
 @torch.no_grad()
@@ -65,6 +70,8 @@ data['pearsons'] = data['pearsons'].fillna('[]').apply(lambda x: x.replace('[', 
 data['locations'] = data['locations'].fillna('[]').apply(lambda x: x.replace('[', '').replace(']', '').replace("'", '').split(', '))
 
 data['lda_theme'] = data['lda_theme'].fillna('[]').apply(lambda x: x.replace('[', '').replace(']', '').replace("'", '').split(', '))
+
+sentence_embeddings = model_ru.encode(data['clean_text'])
 
 with open(DATA_PATH + 'stops_russian.txt', newline='\n', encoding='utf-8') as w:
     words = w.readlines()
@@ -171,15 +178,17 @@ org_all['percentage_vol'] = org_all['count_vol'] / org_all['count_all']
 org_all['score'] = org_all['percentage_vol']*  (org_all['count_all']-1)**0.3
 
 ################## LDA
+# num_topics=50
+# lda = LdaModel(common_corpus, num_topics=num_topics)
 
 texts_to_lda = list(data['clean_text'].apply(lambda x: list(x.split(' '))))
 
 common_dictionary = Dictionary(texts_to_lda)
 common_corpus = [common_dictionary.doc2bow(text) for text in texts_to_lda]
-lda_model =  models.LdaModel.load('lda.model')
 
 num_topics=50
-# lda = LdaModel(common_corpus, num_topics=num_topics)
+lda = LdaModel(common_corpus, num_topics=num_topics)
+
 
 lda_themes_all = []
 for i in range(data.shape[0]):
