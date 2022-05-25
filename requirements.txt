@@ -2,3 +2,4 @@ gensim==3.6.0
 Telethon==1.24.0
 pymorphy2==0.9.1
 unrar==0.4
+flair==0.11.3
