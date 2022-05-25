@@ -109,7 +109,6 @@ def make_ner_datasets(data, entity):
   per_all = Counter(pearsons_all)
   per_vol = Counter(pearsons_vol)
   
-  print(pearsons_all)
   per_all = pd.DataFrame(np.vstack((list(per_all.keys()), list(per_all.values()))).T, columns=['words', 'count_all'])
   per_vol = pd.DataFrame(np.vstack((list(per_vol.keys()), list(per_vol.values()))).T, columns=['words', 'count_vol'])
   per_all = per_all.merge(per_vol, on=['words'], how='outer').fillna(0)
