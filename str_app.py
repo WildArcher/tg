@@ -30,7 +30,15 @@ from transformers import BertTokenizerFast
 from tg_parser_utils import lemmatize_ner
 
 
-
+@torch.no_grad()
+def predict(text):
+    inputs = tokenizer(text=text, max_length=512, padding=True, truncation=True, return_tensors='pt')
+    outputs = model(**inputs)
+    predicted = torch.nn.functional.softmax(outputs.logits, dim=1)
+    predicted_score = np.max(predicted.numpy())
+    predicted_sentiment = int(torch.argmax(predicted).numpy())
+    return predicted_score, predicted_sentiment
+  
 
 def get_lda_themes(text, common_dictionary, lda):
   new_texts_to_lda = list(text.split(' '))
