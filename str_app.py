@@ -64,8 +64,6 @@ data['organisations'] = data['organisations'].fillna('[]').apply(lambda x: x.rep
 data['pearsons'] = data['pearsons'].fillna('[]').apply(lambda x: x.replace('[', '').replace(']', '').replace("'", '').split(', '))
 data['locations'] = data['locations'].fillna('[]').apply(lambda x: x.replace('[', '').replace(']', '').replace("'", '').split(', '))
 
-per_all = make_ner_datasets(data=data, entity='pearsons')
-
 with open(DATA_PATH + 'stops_russian.txt', newline='\n', encoding='utf-8') as w:
     words = w.readlines()
     words = [line.rstrip() for line in words] 
@@ -82,6 +80,35 @@ stop_nltk = list(set([word.lower() for word in words]))
 
 stop_words = stop_words + stop_nltk
 
+pearsons_all = []
+for i in range(data.shape[0]):
+  new_pearsons = data['pearsons'].values[i]
+  if new_pearsons != []:
+    pearsons_all = pearsons_all + new_pearsons
+
+
+pearsons_vol = []
+for i in range(data.shape[0]):
+  new_pearsons = data['pearsons'].values[i]
+  if (new_pearsons != []) and (data['make_vol'].values[i] == 1):
+    pearsons_vol = pearsons_vol + new_pearsons
+
+
+
+per_all = Counter(pearsons_all)
+per_vol = Counter(pearsons_vol)
+
+per_all = pd.DataFrame(np.vstack((list(per_all.keys()), list(per_all.values()))).T, columns=['words', 'count_all'])
+per_vol = pd.DataFrame(np.vstack((list(per_vol.keys()), list(per_vol.values()))).T, columns=['words', 'count_vol'])
+per_all = per_all.merge(per_vol, on=['words'], how='outer').fillna(0)
+
+per_all['count_all'] = per_all['count_all'].astype(int)
+per_all['count_vol'] = per_all['count_vol'].astype(int)
+
+per_all['percentage_vol'] = per_all['count_vol'] / per_all['count_all']
+per_all['score'] = per_all['percentage_vol']*  (per_all['count_all']-1)**0.3
+
+# per_all = make_ner_datasets(data=data, entity='pearsons')
 
 new_text = data_new['message'].values[0]
 new_clean_text = text_preprocessing(text=new_text, lemmatize=True, 
