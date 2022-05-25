@@ -19,6 +19,8 @@ from gensim.corpora.dictionary import Dictionary
 from gensim.models.ldamodel import LdaModel
 from gensim import corpora, models, similarities
 
+from tg_parser_utils import lemmatize_ner
+
 
 def get_lda_themes(text, common_dictionary, lda):
   new_texts_to_lda = list(text.split(' '))
