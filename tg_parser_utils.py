@@ -13,7 +13,7 @@ from gensim.models.ldamodel import LdaModel
 
 # from flair.data import Sentence
 # from flair.models import SequenceTagger
-# from googletrans import Translator
+from googletrans import Translator
 
 # import torch
 # from transformers import AutoModelForSequenceClassification
