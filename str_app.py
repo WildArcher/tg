@@ -210,7 +210,7 @@ lda_themes['score'] = lda_themes['percentage_vol']*  (lda_themes['count_all']-1)
 
 ################## LDA INFERENCE
 
-theme_new_text = get_lda_themes(new_text[0], common_dictionary=common_dictionary, lda=lda)
+theme_new_text = get_lda_themes(new_clean_text, common_dictionary=common_dictionary, lda=lda)
 
 theme_score = 0
 for theme in theme_new_text:
@@ -230,10 +230,10 @@ new_clean_text = text_preprocessing(text=new_text, lemmatize=True,
 
 st.write("Clean text: ", new_clean_text)
 
-texts_to_lda = list(data['clean_text'].apply(lambda x: list(x.split(' '))))
-common_dictionary = Dictionary(texts_to_lda)
-lda_model =  models.LdaModel.load('lda.model')
+# texts_to_lda = list(data['clean_text'].apply(lambda x: list(x.split(' '))))
+# common_dictionary = Dictionary(texts_to_lda)
+# lda_model =  models.LdaModel.load('lda.model')
 
-new_text_themes = get_lda_themes(new_clean_text, common_dictionary=common_dictionary, lda=lda_model)
+new_text_themes = get_lda_themes(new_clean_text, common_dictionary=common_dictionary, lda=lda)
 
 st.write(new_text_themes)
