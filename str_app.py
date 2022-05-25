@@ -176,9 +176,10 @@ texts_to_lda = list(data['clean_text'].apply(lambda x: list(x.split(' '))))
 
 common_dictionary = Dictionary(texts_to_lda)
 common_corpus = [common_dictionary.doc2bow(text) for text in texts_to_lda]
+lda_model =  models.LdaModel.load('lda.model')
 
 num_topics=50
-lda = LdaModel(common_corpus, num_topics=num_topics)
+# lda = LdaModel(common_corpus, num_topics=num_topics)
 
 lda_themes_all = []
 for i in range(data.shape[0]):
@@ -210,7 +211,7 @@ lda_themes['score'] = lda_themes['percentage_vol']*  (lda_themes['count_all']-1)
 
 ################## LDA INFERENCE
 
-theme_new_text = get_lda_themes(new_clean_text, common_dictionary=common_dictionary, lda=lda)
+theme_new_text = get_lda_themes(new_clean_text, common_dictionary=common_dictionary, lda=lda_model)
 
 theme_score = 0
 for theme in theme_new_text:
@@ -234,6 +235,6 @@ st.write("Clean text: ", new_clean_text)
 # common_dictionary = Dictionary(texts_to_lda)
 # lda_model =  models.LdaModel.load('lda.model')
 
-new_text_themes = get_lda_themes(new_clean_text, common_dictionary=common_dictionary, lda=lda)
+new_text_themes = get_lda_themes(new_clean_text, common_dictionary=common_dictionary, lda=lda_model)
 
 st.write(new_text_themes)
