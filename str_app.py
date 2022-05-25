@@ -18,6 +18,8 @@ from gensim.test.utils import common_texts
 from gensim.corpora.dictionary import Dictionary
 from gensim.models.ldamodel import LdaModel
 from gensim import corpora, models, similarities
+from collections import Counter
+counter_ = Counter()
 
 from flair.data import Sentence
 from flair.models import SequenceTagger
@@ -27,7 +29,8 @@ import torch
 from transformers import AutoModelForSequenceClassification
 from transformers import BertTokenizerFast
 
-from tg_parser_utils import lemmatize_ner
+from tg_parser_utils import lemmatize_ner, make_ner_datasets
+
 
 
 @torch.no_grad()
@@ -56,6 +59,12 @@ DATA_PATH = 'data/'
 
 data_new = pd.read_json(DATA_PATH + 'channel_messages_markettwits_new.json')
 data = pd.read_csv(DATA_PATH + 'data (4).csv')
+
+data['organisations'] = data['organisations'].fillna('[]').apply(lambda x: x.replace('[', '').replace(']', '').replace("'", '').split(', '))
+data['pearsons'] = data['pearsons'].fillna('[]').apply(lambda x: x.replace('[', '').replace(']', '').replace("'", '').split(', '))
+data['locations'] = data['locations'].fillna('[]').apply(lambda x: x.replace('[', '').replace(']', '').replace("'", '').split(', '))
+
+per_all = make_ner_datasets(data=data, entity='pearsons')
 
 with open(DATA_PATH + 'stops_russian.txt', newline='\n', encoding='utf-8') as w:
     words = w.readlines()
@@ -88,11 +97,3 @@ lda_model =  models.LdaModel.load('lda.model')
 new_text_themes = get_lda_themes(new_clean_text, common_dictionary=common_dictionary, lda=lda_model)
 
 st.write(new_text_themes)
-
-import unrar
-
-from unrar import rarfile
-rar = rarfile.RarFile('data/sentence_embeddings_mark_tw_only_clean_text.rar')
-rar.extractall()
-# rar.read('test_file.txt')
-sentence_embeddings = np.load('sentence_embeddings_mark_tw_only_clean_text.npy')
